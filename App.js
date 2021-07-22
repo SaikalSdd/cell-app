@@ -16,41 +16,62 @@ import * as SplashScreen from "expo-splash-screen";
 import Home from "./screens/notebooks/Home";
 import Notebooks from "./screens/notebooks/NotebooksList";
 import NoteScreen from "./screens/notebooks/NoteScreen";
+import Timetable from "./screens/timetables/Timetable";
 
-import notesReducer from "./store/addNote-reducer";
-import { noteBooks_init, cornell_init, noteData_init } from "./helpers/db";
+import notesReducer from "./store/reducers/addNote-reducer";
+import timetableReducer from "./store/reducers/timetable-reducers";
+import {
+  noteBooks_init,
+  cornell_init,
+  noteData_init,
+  timetable_init,
+} from "./helpers/db";
+import AddNewLesson from "./screens/timetables/AddNewLesson";
+import EditLesson from "./screens/timetables/EditLesson";
+import AddText from "./screens/notebooks/AddText";
+import EditText from "./screens/notebooks/EditText";
 
 SplashScreen.preventAutoHideAsync();
 
 noteBooks_init()
   .then(() => {
-    console.log("Initialized database");
+    console.log("Initialized database - Notebooks");
   })
   .catch((err) => {
-    console.log("Initializing db failed.");
+    console.log("Initializing db failed - Notebooks.");
     console.log(err);
   });
 
 cornell_init()
   .then(() => {
-    console.log("Initialized database");
+    console.log("Initialized database - Cornell");
   })
   .catch((err) => {
-    console.log("Initializing db failed.");
+    console.log("Initializing db failed - Cornell.");
     console.log(err);
   });
 
 noteData_init()
   .then(() => {
-    console.log("Initialized database");
+    console.log("Initialized database - Notedata");
   })
   .catch((err) => {
-    console.log("Initializing db failed.");
+    console.log("Initializing db failed - Notedata.");
+    console.log(err);
+  });
+
+timetable_init()
+  .then(() => {
+    console.log("Initialized database - Timetable");
+  })
+  .catch((err) => {
+    console.log("Initializing db failed - Timetable.");
     console.log(err);
   });
 
 const rootReducer = combineReducers({
   noteBooks: notesReducer,
+  timetable: timetableReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
@@ -79,6 +100,11 @@ function App() {
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="NotebooksList" component={Notebooks} />
           <Stack.Screen name="NoteScreen" component={NoteScreen} />
+          <Stack.Screen name="Timetable" component={Timetable} />
+          <Stack.Screen name="AddNewLesson" component={AddNewLesson} />
+          <Stack.Screen name="EditLesson" component={EditLesson} />
+          <Stack.Screen name="AddText" component={AddText} />
+          <Stack.Screen name="EditText" component={EditText} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

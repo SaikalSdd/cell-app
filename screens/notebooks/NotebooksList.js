@@ -20,7 +20,7 @@ import PopUpModal from "../../components/PopUpModal";
 import Card from "../../components/Card";
 import NotebookBox from "../../components/NotebookBox";
 import Title from "../../components/Title";
-import * as addNoteActions from "../../store/addNote-action";
+import * as addNoteActions from "../../store/actions/addNote-action";
 
 import { COLORS } from "../../constants/Colors";
 
@@ -42,6 +42,8 @@ const Notebooks = (props) => {
   const onDelete = (id) => {
     dispatch(addNoteActions.removeNotebook(id));
     dispatch(addNoteActions.removeAllNotebookData(id));
+    dispatch(addNoteActions.removeCornellData(id));
+    dispatch(addNoteActions.removeCornell(id));
   };
 
   const deleteNotebookHandler = (id) => {
@@ -51,7 +53,7 @@ const Notebooks = (props) => {
         onPress: () => {},
         style: "cancel",
       },
-      { text: "Delete", onPress: () => onDelete(id), style: "red" },
+      { text: "Delete", onPress: () => onDelete(id), style: "destructive" },
     ]);
   };
 

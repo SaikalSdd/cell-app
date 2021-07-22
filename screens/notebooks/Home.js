@@ -3,18 +3,20 @@ import { StyleSheet, View, Image, Text, Button } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Card from "../../components/Card";
 import { COLORS } from "../../constants/Colors";
+import * as dbExecutions from "../../helpers/db";
 
 import {
   dropNoteDataTable,
   dropMainNotesTable,
   dropCornellTable,
+  dropTimetable,
 } from "../../helpers/db";
 
 const Home = (props) => {
   const { navigate } = props.navigation;
 
   const dropTables = () => {
-    dropCornellTable();
+    dropTimetable();
     alert("All tables are deleted");
   };
 
@@ -29,7 +31,7 @@ const Home = (props) => {
             <Text style={styles.notebooksBtnTitle}>NOTEBOOKS</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity /* onPress={dropTables} */>
+        <TouchableOpacity onPress={() => navigate("Timetable")}>
           <View style={styles.timetableBtn}>
             <Text style={styles.timetableBtnTitle}>TIMETABLE</Text>
           </View>

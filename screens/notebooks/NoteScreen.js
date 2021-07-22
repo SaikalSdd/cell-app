@@ -21,7 +21,7 @@ import { COLORS } from "../../constants/Colors";
 
 import AppHeader from "../../components/AppHeader";
 
-import * as addNoteActions from "../../store/addNote-action";
+import * as addNoteActions from "../../store/actions/addNote-action";
 import CornellNote from "../../components/CornellNote";
 
 const NoteScreen = ({ route, navigation }) => {
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
     fontFamily: "montserrat-bold",
     fontStyle: "normal",
     letterSpacing: 0.41,
-    color: COLORS.red,
+    color: "#808080",
   },
 });
 

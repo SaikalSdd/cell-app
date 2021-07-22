@@ -13,17 +13,18 @@ import {
   ImageBackground,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 
 import Lightbox from "react-native-lightbox";
 import Title from "./Title";
 import Tab from "../components/Tab";
-import PopUpModal from "../components/PopUpModal";
 
-import * as addNoteActions from "../store/addNote-action";
+import * as addNoteActions from "../store/actions/addNote-action";
 
 const CornellNote = (props) => {
   //INITIALIZATIONS
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   useEffect(() => {
     dispatch(addNoteActions.loadCornellNote());
@@ -55,22 +56,6 @@ const CornellNote = (props) => {
   const addCornell = (id) => {
     dispatch(addNoteActions.addCornell(id));
   };
-  const addTextHandler = () => {
-    dispatch(addNoteActions.isVisible());
-  };
-
-  //MODAL=========================================
-  const isModalVisible = useSelector((state) => state.noteBooks.isModalVisible);
-  const [text, setText] = useState("");
-
-  const saveTextData = (cornellId) => {
-    if (text !== "") {
-      alert(cornellId);
-      dispatch(addNoteActions.addText(text, notebookId, cornellId));
-    }
-    setText("");
-    dispatch(addNoteActions.isVisible());
-  };
 
   //DELETE ITEM------------------------------------------------
   const onImageDelete = (id) => {
@@ -87,7 +72,11 @@ const CornellNote = (props) => {
         onPress: () => {},
         style: "cancel",
       },
-      { text: "Delete", onPress: () => onImageDelete(id), style: "red" },
+      {
+        text: "Delete",
+        onPress: () => onImageDelete(id),
+        style: "destructive",
+      },
     ]);
   };
   const deleteTextHandler = (id, text) => {
@@ -97,8 +86,15 @@ const CornellNote = (props) => {
         onPress: () => {},
         style: "cancel",
       },
-      { text: "Delete", onPress: () => onTextDelete(id), style: "red" },
-      { text: "Edit", onPress: () => textDataEdit(id, text) },
+      { text: "Delete", onPress: () => onTextDelete(id), style: "destructive" },
+      {
+        text: "Edit",
+        onPress: () =>
+          navigation.navigate("EditText", {
+            id: id,
+            text: text,
+          }),
+      },
     ]);
   };
 
@@ -117,10 +113,6 @@ const CornellNote = (props) => {
     setKql(text);
   };
 
-  const focusHandler = () => {
-    textInput.current.focus();
-  };
-
   //SUMMARY ==============================================
   const summaryInput = useRef(null);
   const [noteSummary, setNoteSummary] = useState(
@@ -130,9 +122,6 @@ const CornellNote = (props) => {
   const summaryHandler = (text) => {
     setNoteSummary(text);
   };
-  const focusSummaryHandler = () => {
-    summaryInput.current.focus();
-  };
 
   return (
     <View style={styles.container}>
@@ -141,7 +130,7 @@ const CornellNote = (props) => {
       </Title>
       <ImageBackground
         style={styles.container}
-        source={require("../assets/background6.png")}
+        source={require("../assets/background7.png")}
       >
         <ScrollView>
           <View>
@@ -150,25 +139,23 @@ const CornellNote = (props) => {
                 style={styles.cornellTitle}
                 onChangeText={corTitleChangeHandler}
                 value={corTitle}
+                placeholder={"Title"}
                 multiline={true}
               />
             </View>
             <View style={styles.corMainWrap}>
               <View style={styles.corLeft}>
-                <Title style={{ fontSize: 12, marginLeft: -4 }}>
-                  Keywords/Questions/Links
-                </Title>
                 <ScrollView
                   style={styles.container}
                   keyboardDismissMode={
                     Platform.OS === "ios" ? "interactive" : "on-drag"
                   }
-                  onTouchStart={focusHandler}
                 >
                   <TextInput
                     ref={textInput}
                     multiline={true}
                     onChangeText={kqlHandler}
+                    placeholder={"Key points/Questions/Links"}
                     value={kql}
                     style={{
                       fontSize: 15,
@@ -190,7 +177,11 @@ const CornellNote = (props) => {
                             key={dataId}
                             source={{ uri: data.dataContent }}
                             resizeMode="contain"
-                            style={{ flex: 1, height: 200, margin: 10 }}
+                            style={{
+                              flex: 1,
+                              height: 200,
+                              marginHorizontal: 10,
+                            }}
                           />
                         </Lightbox>
                       </View>
@@ -200,12 +191,12 @@ const CornellNote = (props) => {
                       <TouchableOpacity
                         key={dataId}
                         onLongPress={() =>
-                          deleteTextHandler(data.id, data.textContent)
+                          deleteTextHandler(data.id, data.dataContent)
                         }
                       >
                         <Text
                           key={data.id}
-                          style={{ margin: 20, lineHeight: 20, fontSize: 16 }}
+                          style={{ margin: 12, lineHeight: 20, fontSize: 16 }}
                         >
                           {data.dataContent}
                         </Text>
@@ -224,7 +215,6 @@ const CornellNote = (props) => {
                   keyboardDismissMode={
                     Platform.OS === "ios" ? "interactive" : "on-drag"
                   }
-                  onTouchStart={focusSummaryHandler}
                 >
                   <TextInput
                     ref={summaryInput}
@@ -241,21 +231,6 @@ const CornellNote = (props) => {
             </KeyboardAvoidingView>
           </View>
         </ScrollView>
-
-        <KeyboardAvoidingView>
-          <PopUpModal
-            isVisible={isModalVisible}
-            style={styles.modalInput}
-            inputChangeHandler={(text) => setText(text)}
-            modalTitle="Enter your text:"
-            inputValue={text}
-            onSave={() => saveTextData(cornellId)}
-            onCancel={() => {
-              dispatch(addNoteActions.isVisible());
-              setText("");
-            }}
-          ></PopUpModal>
-        </KeyboardAvoidingView>
       </ImageBackground>
       <Tab
         key={cornellId}
@@ -264,7 +239,6 @@ const CornellNote = (props) => {
         cornellTitle={corTitle}
         kql={kql}
         summary={noteSummary}
-        addText={addTextHandler}
         addCornell={() => addCornell(notebookId)}
       />
     </View>
@@ -314,11 +288,6 @@ const styles = StyleSheet.create({
     borderTopColor: "#C1BBBB",
     borderTopWidth: 1.5,
     padding: 10,
-  },
-
-  modalInput: {
-    height: 300,
-    paddingBottom: 100,
   },
 });
 

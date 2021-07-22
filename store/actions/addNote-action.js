@@ -1,5 +1,5 @@
 import * as FileSystem from "expo-file-system";
-import * as dbExecutions from "../helpers/db";
+import * as dbExecutions from "../../helpers/db";
 
 export const ADD_NOTEBOOK = "ADD_NOTEBOOK";
 export const SET_NOTEBOOKS = "SET_NOTEBOOKS";
@@ -30,7 +30,6 @@ export const addNotebook = (title) => {
   return async (dispatch) => {
     try {
       const dbResult = await dbExecutions.insertNewNotebook(title);
-      console.log(dbResult);
       dispatch({
         type: ADD_NOTEBOOK,
         noteData: {
@@ -49,9 +48,7 @@ export const addImage = (imageUri, notebookId, cornellId) => {
   return async (dispatch) => {
     const fileName = imageUri.split("/").pop();
     const newPath = FileSystem.documentDirectory + fileName;
-
     const date = new Date().toString();
-
     try {
       await FileSystem.moveAsync({
         from: imageUri,
@@ -64,8 +61,6 @@ export const addImage = (imageUri, notebookId, cornellId) => {
         date,
         "image"
       );
-      console.log(dbResult);
-      console.log(`Image is successfully added: ${dbResult}`);
       dispatch({
         type: ADD_IMAGE,
         imageData: {
@@ -78,7 +73,6 @@ export const addImage = (imageUri, notebookId, cornellId) => {
         },
       });
     } catch (err) {
-      console.log(err);
       throw err;
     }
   };
@@ -95,9 +89,6 @@ export const addText = (textData, notebookId, cornellId) => {
         date,
         "text"
       );
-      console.log(dbResult);
-      console.log(`Text is successfully added: ${dbResult}`);
-
       dispatch({
         type: ADD_TEXT,
         textData: {
@@ -146,8 +137,6 @@ export const addCornell = (notebookId) => {
         "",
         notebookId
       );
-      console.log(dbResult);
-      console.log(`Cornell is successfully added: ${dbResult}`);
       dispatch({
         type: ADD_CORNELL,
         cornellData: {
@@ -169,9 +158,9 @@ export const loadNotebooks = () => {
   return async (dispatch) => {
     try {
       const dbResult = await dbExecutions.fetchNotebooks();
-      console.log(dbResult);
       dispatch({ type: SET_NOTEBOOKS, noteBooks: dbResult.rows._array });
     } catch (err) {
+      console.log(err);
       throw err;
     }
   };
@@ -181,7 +170,6 @@ export const loadData = () => {
   return async (dispatch) => {
     try {
       const dbResult = await dbExecutions.fetchData();
-      console.log("fetched noteData", dbResult);
       dispatch({ type: SET_DATA, noteData: dbResult.rows._array });
     } catch (err) {
       throw err;
@@ -193,9 +181,9 @@ export const loadCornellNote = () => {
   return async (dispatch) => {
     try {
       const dbResult = await dbExecutions.fetchCornellNote();
-      console.log("fetched noteData", dbResult);
       dispatch({ type: SET_CORNELL, cornellData: dbResult.rows._array });
     } catch (err) {
+      console.log(err);
       throw err;
     }
   };
@@ -205,7 +193,6 @@ export const removeNotebook = (id) => {
   return async (dispatch) => {
     try {
       const dbResult = await dbExecutions.deleteNotebook(id);
-      console.log(dbResult);
       const dbUpdate = await dbExecutions.fetchNotebooks();
       dispatch({
         type: DELETE_NOTEBOOK,
@@ -222,7 +209,6 @@ export const removeData = (id) => {
   return async (dispatch) => {
     try {
       const dbResult = await dbExecutions.deleteData(id);
-      console.log(dbResult);
       const dbUpdate = await dbExecutions.fetchData();
 
       dispatch({
@@ -239,7 +225,6 @@ export const removeCornellData = (id) => {
   return async (dispatch) => {
     try {
       const dbResult = await dbExecutions.deleteCornellData(id);
-      console.log(dbResult);
       const dbUpdate = await dbExecutions.fetchData();
 
       dispatch({
@@ -257,7 +242,6 @@ export const removeCornell = (id) => {
   return async (dispatch) => {
     try {
       const dbResult = await dbExecutions.deleteCornell(id);
-      console.log(dbResult);
       const dbUpdate = await dbExecutions.fetchCornellNote();
 
       dispatch({
@@ -274,7 +258,6 @@ export const removeAllNotebookData = (id) => {
   return async (dispatch) => {
     try {
       const dbResult = await dbExecutions.deleteAllNotebookData(id);
-      console.log(dbResult);
       const dbUpdate = await dbExecutions.fetchData();
 
       dispatch({
@@ -287,11 +270,11 @@ export const removeAllNotebookData = (id) => {
     }
   };
 };
+
 export const updateTitle = (id, title) => {
   return async (dispatch) => {
     try {
       const dbResult = await dbExecutions.updateNotebookTitle(id, title);
-      console.log(dbResult);
       const dbUpdate = await dbExecutions.fetchNotebooks();
 
       dispatch({
@@ -321,7 +304,6 @@ export const updateCornellNote = (title, kql, summary, cornellId) => {
       );
 
       const dbUpdate = await dbExecutions.fetchCornellNote();
-      console.log(dbUpdate);
       dispatch({
         type: UPDATE_CORNELL,
         cornellData: dbUpdate.rows._array,
@@ -336,12 +318,12 @@ export const updateTextData = (id, text) => {
   return async (dispatch) => {
     try {
       const dbResult = await dbExecutions.updateText(id, text);
-      console.log(dbResult);
-      const dbUpdate = await dbExecutions.fetchTextData();
+
+      const dbUpdate = await dbExecutions.fetchData();
 
       dispatch({
         type: UPDATE_TEXT,
-        textData: dbUpdate.rows._array,
+        noteData: dbUpdate.rows._array,
       });
     } catch (err) {
       console.log(err);

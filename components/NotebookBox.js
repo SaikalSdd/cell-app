@@ -23,7 +23,7 @@ const NotebookBox = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.primary.boxColor,
+    backgroundColor: "#ffffff",
     height: 170,
     width: 120,
     borderTopRightRadius: 15,

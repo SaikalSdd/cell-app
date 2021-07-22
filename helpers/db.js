@@ -55,6 +55,24 @@ export const cornell_init = () => {
   return promise;
 };
 
+export const timetable_init = () => {
+  const promise = new Promise((resolve, reject) => {
+    noteBooks.transaction((tx) => {
+      tx.executeSql(
+        "CREATE TABLE IF NOT EXISTS timetable (lessonId INTEGER PRIMARY KEY NOT NULL, title TEXT, startTime TEXT, endTime TEXT, location TEXT, extra_descriptions TEXT);",
+        [],
+        () => {
+          resolve();
+        },
+        (_, err) => {
+          reject(err);
+        }
+      );
+    });
+  });
+  return promise;
+};
+
 export const insertNewNotebook = (title) => {
   const promise = new Promise((resolve, reject) => {
     noteBooks.transaction((tx) => {
@@ -114,6 +132,29 @@ export const insertCornellNote = (title, date, kql, summary, notebookId) => {
   });
   return promise;
 };
+export const insertLesson = (
+  title,
+  startTime,
+  endTime,
+  location,
+  extra_descriptions
+) => {
+  const promise = new Promise((resolve, reject) => {
+    noteBooks.transaction((tx) => {
+      tx.executeSql(
+        `INSERT INTO timetable (title, startTime, endTime, location, extra_descriptions) VALUES (?, ?, ?, ?, ?);`,
+        [title, startTime, endTime, location, extra_descriptions],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, err) => {
+          reject(err);
+        }
+      );
+    });
+  });
+  return promise;
+};
 
 export const fetchNotebooks = () => {
   const promise = new Promise((resolve, reject) => {
@@ -155,6 +196,24 @@ export const fetchCornellNote = () => {
     noteBooks.transaction((tx) => {
       tx.executeSql(
         "SELECT * FROM cornell",
+        [],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, err) => {
+          reject(err);
+        }
+      );
+    });
+  });
+  return promise;
+};
+
+export const fetchTimetable = () => {
+  const promise = new Promise((resolve, reject) => {
+    noteBooks.transaction((tx) => {
+      tx.executeSql(
+        "SELECT * FROM timetable",
         [],
         (_, result) => {
           resolve(result);
@@ -258,6 +317,24 @@ export const deleteAllNotebookData = (id) => {
   return promise;
 };
 
+export const deleteLesson = (id) => {
+  const promise = new Promise((resolve, reject) => {
+    noteBooks.transaction((tx) => {
+      tx.executeSql(
+        "DELETE FROM timetable WHERE lessonId = ?",
+        [id],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, err) => {
+          reject(err);
+        }
+      );
+    });
+  });
+  return promise;
+};
+
 export const updateNotebookTitle = (id, title) => {
   const promise = new Promise((resolve, reject) => {
     noteBooks.transaction((tx) => {
@@ -278,6 +355,23 @@ export const updateNotebookTitle = (id, title) => {
 
 //('UPDATE users SET first_name = ? , last_name = ? WHERE id = ?', ["Doctor", "Strange", 3])
 
+export const updateLesson = (title, startTime, endTime, location, lessonId) => {
+  const promise = new Promise((resolve, reject) => {
+    noteBooks.transaction((tx) => {
+      tx.executeSql(
+        "UPDATE timetable SET title = ?, startTime = ?, endTime = ?, location = ? WHERE lessonId = ?",
+        [title, startTime, endTime, location, lessonId],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, err) => {
+          reject(err);
+        }
+      );
+    });
+  });
+  return promise;
+};
 export const updateCornell = (title, kql, summary, cornellId) => {
   const promise = new Promise((resolve, reject) => {
     noteBooks.transaction((tx) => {
@@ -299,7 +393,7 @@ export const updateText = (id, text) => {
   const promise = new Promise((resolve, reject) => {
     noteBooks.transaction((tx) => {
       tx.executeSql(
-        "UPDATE textData SET textContent = ? WHERE textId = ?",
+        "UPDATE noteData SET dataContent = ? WHERE dataId = ?",
         [text, id],
         (_, result) => {
           resolve(result);
@@ -370,6 +464,23 @@ export const dropNoteDataTable = () => {
     noteBooks.transaction((tx) => {
       tx.executeSql(
         "DROP TABLE noteData;",
+
+        (_, result) => {
+          resolve(result);
+        },
+        (_, err) => {
+          reject(err);
+        }
+      );
+    });
+  });
+  return promise;
+};
+export const dropTimetable = () => {
+  const promise = new Promise((resolve, reject) => {
+    noteBooks.transaction((tx) => {
+      tx.executeSql(
+        "DROP TABLE timetable;",
 
         (_, result) => {
           resolve(result);

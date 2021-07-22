@@ -15,10 +15,10 @@ import {
   DELETE_CORNELL_DATA,
   IS_MODAL_VISIBLE,
   UPDATE_CORNELL,
-} from "./addNote-action";
-import Notebook from "../models/note";
-import Data from "../models/noteData";
-import CornellNote from "../models/cornellNote";
+} from "../actions/addNote-action";
+import Notebook from "../../models/note";
+import Data from "../../models/noteData";
+import CornellNote from "../../models/cornellNote";
 
 const initialState = {
   noteBooks: [],
@@ -240,14 +240,15 @@ export default (state = initialState, action) => {
       return {
         noteBooks: state.noteBooks,
         cornellNotes: state.cornellNotes,
-        textData: action.textData.map(
-          (tx) =>
-            new Text(
-              tx.textId.toString(),
-              tx.textContent,
-              tx.notebookId.toString(),
-              tx.date,
-              tx.dataType
+        noteData: action.noteData.map(
+          (dt) =>
+            new Data(
+              dt.dataId.toString(),
+              dt.dataContent,
+              dt.notebookId.toString(),
+              dt.cornellId.toString(),
+              dt.date,
+              dt.dataType
             )
         ),
         isModalVisible: state.isModalVisible,
