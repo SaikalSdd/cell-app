@@ -16,9 +16,6 @@ const Timetable = (props) => {
 
   const timetableData = useSelector((state) => state.timetable.timetable);
 
-  console.log(timetableData);
-
-  const numOfDays = 6;
   const pivotDate = genTimeBlock("mon");
 
   const scrollViewRef = (ref) => {
@@ -56,11 +53,11 @@ const Timetable = (props) => {
           events={timetableData}
           pivotTime={8}
           pivotDate={pivotDate}
-          numberOfDays={numOfDays}
+          numberOfDays={7}
           onEventPress={onEventPress}
           headerStyle={styles.headerStyle}
-          formatDateHeader="dddd"
-          locale="kg"
+          formatDateHeader="ddd"
+          locale="en-US"
         />
       </View>
     </View>

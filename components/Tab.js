@@ -22,6 +22,18 @@ const Tab = (props) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
 
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!");
+        }
+      }
+    })();
+  }, []);
+
   const [permission, askPermission] = Permissions.usePermissions(
     Permissions.CAMERA,
     { ask: true }
@@ -59,11 +71,10 @@ const Tab = (props) => {
     setModalVisible(!modalVisible);
 
     dispatch(addNoteActions.addImage(image.uri, notebookId, cornellId));
-    console.log(result.uri);
 
-    if (!result.cancelled) {
+    /*  if (!result.cancelled) {
       alert(result.uri);
-    }
+    } */
   };
 
   const deleteCornell = (id) => {

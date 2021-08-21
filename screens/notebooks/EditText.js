@@ -57,7 +57,7 @@ const EditText = ({ route, navigation }) => {
           }
         >
           <TextInput
-            /* placeholder="Type..." */
+            placeholder="Type..."
             multiline
             style={styles.textInput}
             value={newText}

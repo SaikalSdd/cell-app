@@ -20,6 +20,7 @@ import Title from "./Title";
 import Tab from "../components/Tab";
 
 import * as addNoteActions from "../store/actions/addNote-action";
+import { COLORS } from "../constants/Colors";
 
 const CornellNote = (props) => {
   //INITIALIZATIONS
@@ -181,6 +182,7 @@ const CornellNote = (props) => {
                               flex: 1,
                               height: 200,
                               marginHorizontal: 10,
+                              marginVertical: 3,
                             }}
                           />
                         </Lightbox>
@@ -254,7 +256,7 @@ const styles = StyleSheet.create({
   cornellTitleContainer: {
     width: "100%",
     borderBottomWidth: 1.5,
-    borderBottomColor: "#C1BBBB",
+    borderBottomColor: COLORS.primary.dark,
     justifyContent: "center",
     textAlign: "center",
     alignItems: "center",
@@ -273,7 +275,7 @@ const styles = StyleSheet.create({
   },
   corLeft: {
     width: "30%",
-    borderRightColor: "#C1BBBB",
+    borderRightColor: COLORS.primary.dark,
     borderRightWidth: 1.5,
     alignItems: "center",
     padding: 5,
@@ -285,7 +287,7 @@ const styles = StyleSheet.create({
   corSummary: {
     width: "100%",
     minHeight: 300,
-    borderTopColor: "#C1BBBB",
+    borderTopColor: COLORS.primary.dark,
     borderTopWidth: 1.5,
     padding: 10,
   },
