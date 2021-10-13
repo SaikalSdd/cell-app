@@ -5,8 +5,6 @@ import {
   DELETE_LESSON,
 } from "../actions/timetable-actions";
 
-import Timetable from "../../models/timetable";
-
 const initialState = {
   timetable: [],
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { SafeAreaView, StyleSheet, View, Text, Alert } from "react-native";
 import { IconButton } from "react-native-paper";
 import TimeTableView, { genTimeBlock } from "react-native-timetable";
 import { COLORS } from "../../constants/Colors";
@@ -7,14 +7,71 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import * as timetableActions from "../../store/actions/timetable-actions";
 
-const Timetable = (props) => {
-  const dispatch = useDispatch();
+const events_data = [
+  {
+    title: "Math",
+    startTime: genTimeBlock("MON", 9),
+    endTime: genTimeBlock("MON", 10, 50),
+    location: "Classroom 403",
+    extra_descriptions: ["Kim", "Lee"],
+  },
+  {
+    title: "Math",
+    startTime: genTimeBlock("WED", 9),
+    endTime: genTimeBlock("WED", 10, 50),
+    location: "Classroom 403",
+    extra_descriptions: ["Kim", "Lee"],
+  },
+  {
+    title: "Physics",
+    startTime: genTimeBlock("MON", 11),
+    endTime: genTimeBlock("MON", 11, 50),
+    location: "Lab 404",
+    extra_descriptions: ["Einstein"],
+  },
+  {
+    title: "Physics",
+    startTime: genTimeBlock("WED", 11),
+    endTime: genTimeBlock("WED", 11, 50),
+    location: "Lab 404",
+    extra_descriptions: ["Einstein"],
+  },
+  {
+    title: "Mandarin",
+    startTime: genTimeBlock("TUE", 9),
+    endTime: genTimeBlock("TUE", 10, 50),
+    location: "Language Center",
+    extra_descriptions: ["Chen"],
+  },
+  {
+    title: "Japanese",
+    startTime: genTimeBlock("FRI", 9),
+    endTime: genTimeBlock("FRI", 10, 50),
+    location: "Language Center",
+    extra_descriptions: ["Nakamura"],
+  },
+  {
+    title: "Club Activity",
+    startTime: genTimeBlock("THU", 9),
+    endTime: genTimeBlock("THU", 10, 50),
+    location: "Activity Center",
+  },
+  {
+    title: "Club Activity",
+    startTime: genTimeBlock("FRI", 13, 30),
+    endTime: genTimeBlock("FRI", 14, 50),
+    location: "Activity Center",
+  },
+];
 
+const App = (props) => {
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(timetableActions.loadTimetable());
   }, [dispatch]);
 
   const timetableData = useSelector((state) => state.timetable.timetable);
+  console.log(timetableData);
 
   const pivotDate = genTimeBlock("mon");
 
@@ -32,7 +89,7 @@ const Timetable = (props) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.header}>
         <IconButton
           icon="arrow-left"
@@ -40,7 +97,7 @@ const Timetable = (props) => {
           size={25}
           onPress={() => props.navigation.goBack()}
         />
-        <Text style={styles.headerTitle}>Timetable</Text>
+        <Text style={styles.headerTitle}>{timetableData.length}</Text>
         <IconButton
           icon="plus"
           color="#fff"
@@ -57,10 +114,10 @@ const Timetable = (props) => {
           onEventPress={onEventPress}
           headerStyle={styles.headerStyle}
           formatDateHeader="ddd"
-          locale="en-US"
+          locale="en"
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -94,4 +151,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Timetable;
+export default App;

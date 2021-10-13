@@ -145,24 +145,30 @@ const NoteScreen = ({ route, navigation }) => {
           onPress={toggleSideMenu}
         />
       </AppHeader>
+      <Text style={styles.warningText}>
+        Please do not forget to save your changes by{" "}
+        <Text style={styles.warningTextBold}>pressing save button</Text> .
+        Unless you may lose your changes
+      </Text>
       <View style={styles.indicatorContainer}>
-        {cornellNotes.map((note, noteIndex) => {
-          const width = scrollX.interpolate({
-            inputRange: [
-              windowWidth * (noteIndex - 1),
-              windowWidth * noteIndex,
-              windowWidth * (noteIndex + 1),
-            ],
-            outputRange: [8, 16, 8],
-            extrapolate: "clamp",
-          });
-          return (
-            <Animated.View
-              key={noteIndex}
-              style={[styles.normalDot, { width }]}
-            />
-          );
-        })}
+        {cornellNotes.length <= 20 &&
+          cornellNotes.map((note, noteIndex) => {
+            const width = scrollX.interpolate({
+              inputRange: [
+                windowWidth * (noteIndex - 1),
+                windowWidth * noteIndex,
+                windowWidth * (noteIndex + 1),
+              ],
+              outputRange: [8, 16, 8],
+              extrapolate: "clamp",
+            });
+            return (
+              <Animated.View
+                key={noteIndex}
+                style={[styles.normalDot, { width }]}
+              />
+            );
+          })}
       </View>
       <View style={styles.blankList}>
         {cornellNotes[0] !== undefined ? (
@@ -304,6 +310,17 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     letterSpacing: 0.41,
     color: "#808080",
+  },
+  warningText: {
+    marginTop: 0,
+    marginBottom: 20,
+    marginLeft: 20,
+    width: "80%",
+    color: "orange",
+    fontFamily: "montserrat-regular",
+  },
+  warningTextBold: {
+    fontFamily: "montserrat-bold",
   },
 });
 

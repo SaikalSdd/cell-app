@@ -8,6 +8,7 @@ import {
   Alert,
   TouchableOpacity,
   Platform,
+  SafeAreaView,
 } from "react-native";
 import { IconButton } from "react-native-paper";
 import { COLORS } from "../../constants/Colors";
@@ -62,42 +63,15 @@ const AddNewLesson = (props) => {
           )
         );
       });
+      /* alert(lessonDaysCount[0].startTime.minutes); */
       props.navigation.goBack();
     } else {
       Alert.alert(
         "Form Checker Error",
-        "Enter a value in the Title field before proceeding"
+        "Enter a value in the Title field or add lesson periods before proceeding"
       );
     }
   };
-  /* const onSave = () => {
-    if (title !== "") {
-      lessonDaysCount.map((lesson) => {
-        dispatch(
-          timetableActions.addLesson(
-            title,
-            genTimeBlock(
-              lesson.day,
-              lesson.startTime.hours,
-              lesson.startTime.minutes
-            ),
-            genTimeBlock(
-              lesson.day,
-              lesson.endTime.hours,
-              lesson.endTime.minutes
-            ),
-            location
-          )
-        );
-      });
-      props.navigation.goBack();
-    } else {
-      Alert.alert(
-        "Form Checker Error",
-        "Enter a value in the Title field before proceeding"
-      );
-    }
-  }; */
 
   const titleChangeHandler = (e) => {
     setTitle(e);
@@ -158,7 +132,7 @@ const AddNewLesson = (props) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.header}>
         <IconButton
           icon="arrow-left"
@@ -206,7 +180,7 @@ const AddNewLesson = (props) => {
           <Text style={styles.addButton}>Add Time</Text>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

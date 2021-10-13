@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as Font from "expo-font";
+import { Asset } from "expo-asset";
 import AppLoading from "expo-app-loading";
 import { StatusBar } from "expo-status-bar";
 
@@ -78,15 +79,39 @@ const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 const Stack = createStackNavigator();
 
+const cacheImages = (images) => {
+  return images.map((image) => Asset.fromModule(image).downloadAsync());
+};
+
+const cacheFonts = (fonts) => {
+  return Font.loadAsync(fonts);
+};
+
 function App() {
   [dataLoaded, setDataLoaded] = useState(false);
+
+  const _loadAssetsAsync = async () => {
+    const imageAssets = cacheImages([
+      require("./assets/logo.png"),
+      require("./assets/background7.png"),
+    ]);
+
+    const fontAssets = cacheFonts({
+      "montserrat-regular": require("./assets/fonts/Montserrat-Regular.ttf"),
+      "montserrat-bold": require("./assets/fonts/Montserrat-Bold.ttf"),
+      "mountains-of-christmas-regular": require("./assets/fonts/MountainsofChristmas-Regular.ttf"),
+      "mountains-of-christmas-bold": require("./assets/fonts/MountainsofChristmas-Bold.ttf"),
+    });
+
+    await Promise.all([...imageAssets, fontAssets]);
+  };
 
   if (!dataLoaded) {
     return (
       <AppLoading
-        startAsync={fetchFonts}
+        startAsync={_loadAssetsAsync}
         onFinish={() => setDataLoaded(true)}
-        onError={(err) => alert(err)}
+        onError={console.warn}
       />
     );
   }
@@ -107,17 +132,9 @@ function App() {
           <Stack.Screen name="EditText" component={EditText} />
         </Stack.Navigator>
       </NavigationContainer>
+      <StatusBar style="auto" />
     </Provider>
   );
 }
-
-const fetchFonts = () => {
-  return Font.loadAsync({
-    "montserrat-regular": require("./assets/fonts/Montserrat-Regular.ttf"),
-    "montserrat-bold": require("./assets/fonts/Montserrat-Bold.ttf"),
-    "mountains-of-christmas-regular": require("./assets/fonts/MountainsofChristmas-Regular.ttf"),
-    "mountains-of-christmas-bold": require("./assets/fonts/MountainsofChristmas-Bold.ttf"),
-  });
-};
 
 export default App;
